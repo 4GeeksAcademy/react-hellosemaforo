@@ -1,25 +1,61 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 
 //include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+
 
 //create your first component
-const Home = () => {
+export function Home() {
+	const [colorInicial, setColorInicial] = useState("red");
+	const [activo, setActivo] = useState(false);
+
+
+useEffect(()=>{
+	let interval;
+		if (activo) {
+			interval=setInterval(() => {
+				setColorInicial(prevColor => {
+                    if (prevColor === "red") return "ambar";
+                    if (prevColor === "ambar") return "verde";
+                    if (prevColor === "verde") return "red";
+                });
+			}, 1000);
+		}else {clearInterval(interval)}
+		return ()=>clearInterval(interval)		
+},[activo])
+
+
+	console.log(activo)
+	const handelclick = () => {
+		if (!activo) {
+			setActivo(true)
+		}
+	}
+
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
+		<>
+			<div>
+				<div className="paloSemaforo"></div>
+				<div className="semaforo">
+					<div
+						onClick={() => setColorInicial("red")}
+						className={
+							"luzRoja" + (colorInicial === "red" ? " glow" : "")
+						}></div>
+					<div
+						onClick={() => setColorInicial("ambar")}
+						className={
+							"luzAmbar" + (colorInicial === "ambar" ? " glow" : "")
+						}></div>
+					<div
+						onClick={() => setColorInicial("verde")}
+						className={
+							"luzVerde" + (colorInicial === "verde" ? " glow" : "")
+						}></div>
+				</div>
+				<button onClick={() => handelclick()} className="btn btn-success">semaforo automatico</button>
+			</div>
+		</>
 	);
 };
 
